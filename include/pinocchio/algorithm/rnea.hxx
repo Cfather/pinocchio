@@ -153,8 +153,19 @@ namespace pinocchio
         Pass2::run(model.joints[i], data.joints[i], arg2);
       }
 
-      // Add rotorinertia contribution
-      data.tau.array() += model.armature.array() * a.array(); // Check if there is memory allocation
+      // Add damping and rotorinertia contribution
+      data.tau.array() += 
+        model.damping.array() * v.array() +
+        model.armature.array() * a.array(); // Check if there is memory allocation
+
+      // Add friction contribution
+      for (JointIndex i = 1; i < (JointIndex)model.njoints; ++i)
+      {
+        if (v(i) > 1e-4)
+          data.tau(i) += model.friction(i) * v(i);
+        else if (v(i) < -1e-4)
+          data.tau(i) -= model.friction(i) * v(i);
+      }
 
       return data.tau;
     }
@@ -208,9 +219,19 @@ namespace pinocchio
         Pass2::run(model.joints[i], data.joints[i], typename Pass2::ArgsType(model, data));
       }
 
-      // Add armature contribution
-      data.tau.array() +=
-        model.armature.array() * a.array(); // TODO: check if there is memory allocation
+      // Add damping and rotorinertia contribution
+      data.tau.array() += 
+        model.damping.array() * v.array() +
+        model.armature.array() * a.array(); // Check if there is memory allocation
+
+      // Add friction contribution
+      for (JointIndex i = 1; i < (JointIndex)model.njoints; ++i)
+      {
+        if (v(i) > 1e-4)
+          data.tau(i) += model.friction(i) * v(i);
+        else if (v(i) < -1e-4)
+          data.tau(i) -= model.friction(i) * v(i);
+      }
 
       return data.tau;
     }
@@ -812,8 +833,19 @@ namespace pinocchio
         Pass2::run(model.joints[i], data.joints[i], arg2);
       }
 
-      // Add rotorinertia contribution
-      data.tau.array() += model.armature.array() * a_r.array(); // Check if there is memory allocation
+      // Add damping and rotorinertia contribution
+      data.tau.array() += 
+        model.damping.array() * v.array() +
+        model.armature.array() * a_r.array(); // Check if there is memory allocation
+
+      // Add friction contribution
+      for (JointIndex i = 1; i < (JointIndex)model.njoints; ++i)
+      {
+        if (v(i) > 1e-4)
+          data.tau(i) += model.friction(i) * v(i);
+        else if (v(i) < -1e-4)
+          data.tau(i) -= model.friction(i) * v(i);
+      }
 
       return data.tau;
     }

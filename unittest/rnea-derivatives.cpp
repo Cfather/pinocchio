@@ -117,6 +117,7 @@ BOOST_AUTO_TEST_CASE(test_rnea_derivatives)
 
   Model model;
   buildModels::humanoidRandom(model);
+  model.damping = VectorXd::Random(model.nv) + VectorXd::Ones(model.nv);
   model.armature = VectorXd::Random(model.nv) + VectorXd::Ones(model.nv);
 
   Data data(model), data_fd(model), data_ref(model);

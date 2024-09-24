@@ -525,7 +525,8 @@ namespace pinocchio
       {
         Pass2::run(
           model.joints[i], typename Pass2::ArgsType(
-                             model, data, PINOCCHIO_EIGEN_CONST_CAST(MatrixType1, rnea_partial_dq),
+                             model, data, 
+                             PINOCCHIO_EIGEN_CONST_CAST(MatrixType1, rnea_partial_dq),
                              PINOCCHIO_EIGEN_CONST_CAST(MatrixType2, rnea_partial_dv),
                              PINOCCHIO_EIGEN_CONST_CAST(MatrixType3, rnea_partial_da)));
       }
@@ -538,9 +539,11 @@ namespace pinocchio
         m_out.linear() += model.gravity.linear().cross(m_in.angular());
       }
 
-      // Add armature contribution
+      // Add damping and armature contribution
       data.tau.array() +=
+        model.damping.array() * v.array() +
         model.armature.array() * a.array(); // TODO: check if there is memory allocation
+      PINOCCHIO_EIGEN_CONST_CAST(MatrixType2, rnea_partial_dv).diagonal() += model.damping;
       PINOCCHIO_EIGEN_CONST_CAST(MatrixType3, rnea_partial_da).diagonal() += model.armature;
     }
 
@@ -607,7 +610,8 @@ namespace pinocchio
       {
         Pass2::run(
           model.joints[i], typename Pass2::ArgsType(
-                             model, data, PINOCCHIO_EIGEN_CONST_CAST(MatrixType1, rnea_partial_dq),
+                             model, data, 
+                             PINOCCHIO_EIGEN_CONST_CAST(MatrixType1, rnea_partial_dq),
                              PINOCCHIO_EIGEN_CONST_CAST(MatrixType2, rnea_partial_dv),
                              PINOCCHIO_EIGEN_CONST_CAST(MatrixType3, rnea_partial_da)));
       }
@@ -622,6 +626,7 @@ namespace pinocchio
 
       // Add armature contribution
       data.tau.array() +=
+        model.damping.array() * v.array() + 
         model.armature.array() * a.array(); // TODO: check if there is memory allocation
       data.M.diagonal() += model.armature;
     }
