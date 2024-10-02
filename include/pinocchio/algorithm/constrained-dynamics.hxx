@@ -1022,7 +1022,14 @@ namespace pinocchio
     typedef ContactABAForwardStep1<
       Scalar, Options, JointCollectionTpl, ConfigVectorType, TangentVectorType1>
       Pass1;
-    data.tau = tau;
+    data.tau = tau - model.damping.array() * v.array();
+    for (JointIndex i = 0; i < (JointIndex)model.njoints; ++i)
+    {
+      if (v(i) > 1e-4)
+        data.u(i) -= model.friction(i) * v(i);
+      else if (v(i) < -1e-4)
+        data.u(i) += model.friction(i) * v(i);
+    }
     for (JointIndex i = 1; i < (JointIndex)model.njoints; ++i)
     {
       Pass1::run(

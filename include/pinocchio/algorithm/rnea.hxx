@@ -159,7 +159,7 @@ namespace pinocchio
         model.armature.array() * a.array(); // Check if there is memory allocation
 
       // Add friction contribution
-      for (JointIndex i = 1; i < (JointIndex)model.njoints; ++i)
+      for (JointIndex i = 0; i < (JointIndex)model.njoints; ++i)
       {
         if (v(i) > 1e-4)
           data.tau(i) += model.friction(i) * v(i);
@@ -225,7 +225,7 @@ namespace pinocchio
         model.armature.array() * a.array(); // Check if there is memory allocation
 
       // Add friction contribution
-      for (JointIndex i = 1; i < (JointIndex)model.njoints; ++i)
+      for (JointIndex i = 0; i < (JointIndex)model.njoints; ++i)
       {
         if (v(i) > 1e-4)
           data.tau(i) += model.friction(i) * v(i);
@@ -839,7 +839,7 @@ namespace pinocchio
         model.armature.array() * a_r.array(); // Check if there is memory allocation
 
       // Add friction contribution
-      for (JointIndex i = 1; i < (JointIndex)model.njoints; ++i)
+      for (JointIndex i = 0; i < (JointIndex)model.njoints; ++i)
       {
         if (v(i) > 1e-4)
           data.tau(i) += model.friction(i) * v(i);

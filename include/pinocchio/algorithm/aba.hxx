@@ -260,7 +260,14 @@ namespace pinocchio
 
       data.oa_gf[0] = -model.gravity;
       data.of[0].setZero();
-      data.u = tau;
+      data.u = tau.array() - model.damping.array() * v.array();
+      for (JointIndex i = 0; i < (JointIndex)model.njoints; ++i)
+      {
+        if (v(i) > 1e-4)
+          data.u(i) -= model.friction(i) * v(i);
+        else if (v(i) < -1e-4)
+          data.u(i) += model.friction(i) * v(i);
+      }
 
       typedef AbaWorldConventionForwardStep1<
         Scalar, Options, JointCollectionTpl, ConfigVectorType, TangentVectorType1>
@@ -323,7 +330,14 @@ namespace pinocchio
       typedef typename ModelTpl<Scalar, Options, JointCollectionTpl>::JointIndex JointIndex;
 
       data.oa_gf[0] = -model.gravity;
-      data.u = tau;
+      data.u = tau.array() - model.damping.array() * v.array();
+      for (JointIndex i = 0; i < (JointIndex)model.njoints; ++i)
+      {
+        if (v(i) > 1e-4)
+          data.u(i) -= model.friction(i) * v(i);
+        else if (v(i) < -1e-4)
+          data.u(i) += model.friction(i) * v(i);
+      }
 
       typedef AbaWorldConventionForwardStep1<
         Scalar, Options, JointCollectionTpl, ConfigVectorType, TangentVectorType1>
@@ -506,7 +520,14 @@ namespace pinocchio
       data.v[0].setZero();
       data.a_gf[0] = -model.gravity;
       data.f[0].setZero();
-      data.u = tau;
+      data.u = tau.array() - model.damping.array() * v.array();
+      for (JointIndex i = 0; i < (JointIndex)model.njoints; ++i)
+      {
+        if (v(i) > 1e-4)
+          data.u(i) -= model.friction(i) * v(i);
+        else if (v(i) < -1e-4)
+          data.u(i) += model.friction(i) * v(i);
+      }
 
       typedef AbaLocalConventionForwardStep1<
         Scalar, Options, JointCollectionTpl, ConfigVectorType, TangentVectorType1>
@@ -570,7 +591,14 @@ namespace pinocchio
 
       data.v[0].setZero();
       data.a_gf[0] = -model.gravity;
-      data.u = tau;
+      data.u = tau.array() - model.damping.array() * v.array();
+      for (JointIndex i = 0; i < (JointIndex)model.njoints; ++i)
+      {
+        if (v(i) > 1e-4)
+          data.u(i) -= model.friction(i) * v(i);
+        else if (v(i) < -1e-4)
+          data.u(i) += model.friction(i) * v(i);
+      }
 
       typedef AbaLocalConventionForwardStep1<
         Scalar, Options, JointCollectionTpl, ConfigVectorType, TangentVectorType1>

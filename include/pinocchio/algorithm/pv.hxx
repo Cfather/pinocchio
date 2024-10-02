@@ -434,7 +434,14 @@ namespace pinocchio
     data.a_gf[0] = -model.gravity;
     data.a[0] = data.a_gf[0];
     data.f[0].setZero();
-    data.u = tau;
+    data.u = tau.array() - model.damping.array() * v.array();
+      for (JointIndex i = 0; i < (JointIndex)model.njoints; ++i)
+      {
+        if (v(i) > 1e-4)
+          data.u(i) -= model.friction(i) * v(i);
+        else if (v(i) < -1e-4)
+          data.u(i) += model.friction(i) * v(i);
+      }
 
     // Set the lA and LA at the contact points to zero.
     for (std::size_t i = 0; i < contact_models.size(); ++i)
@@ -635,7 +642,14 @@ namespace pinocchio
     data.a_gf[0] = -model.gravity;
     data.a[0] = data.a_gf[0];
     data.f[0].setZero();
-    data.u = tau;
+    data.u = tau.array() - model.damping.array() * v.array();
+    for (JointIndex i = 0; i < (JointIndex)model.njoints; ++i)
+    {
+      if (v(i) > 1e-4)
+        data.u(i) -= model.friction(i) * v(i);
+      else if (v(i) < -1e-4)
+        data.u(i) += model.friction(i) * v(i);
+    }
 
     // Set the lA and LA at the contact points to zero.
     for (std::size_t i = 0; i < contact_models.size(); ++i)
